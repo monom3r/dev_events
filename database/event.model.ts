@@ -31,12 +31,17 @@ export interface EventModel extends Model<EventDocument> {}
  * Simple slug generator to create URL-friendly identifiers from titles.
  */
 const slugify = (value: string): string => {
-  return value
+  const slug = value
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9\s-]/g, '') // remove non-alphanumeric chars
     .replace(/\s+/g, '-') // replace spaces with dashes
     .replace(/-+/g, '-'); // collapse multiple dashes
+  
+  if (slug.length === 0) {
+    throw new Error('Cannot generate slug: title must contain at least one alphanumeric character.');
+  }
+  return slug;
 };
 
 /**
