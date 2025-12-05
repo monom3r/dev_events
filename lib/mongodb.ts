@@ -58,6 +58,12 @@ export async function connectToDatabase(): Promise<Connection> {
     // Create a new connection promise and store it in the cache.
     cached.promise = mongoose.connect(uri).then((mongooseInstance) => {
       return mongooseInstance.connection;
+    }).catch((error) => {
+      // Clear the cached promise on failure to allow retries
+      cached.promise = null;
+      cached.conn = null;
+      // Rethrow the error so callers see the failure
+      throw error;
     });
   }
 
